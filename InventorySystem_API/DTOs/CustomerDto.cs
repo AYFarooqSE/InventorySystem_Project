@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InventorySystem_Domain.Models
+﻿namespace InventorySystem_API.DTOs
 {
-    public class CustomersModel
+    public class CustomerDto
     {
-        [Key]
         public int CustomerID { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
