@@ -1,5 +1,7 @@
-﻿using InventorySystem_API.DTOs;
+﻿using AutoMapper;
+using InventorySystem_API.DTOs;
 using InventorySystem_Application.AppInterfaces;
+using InventorySystem_Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -11,9 +13,11 @@ namespace InventorySystem_API.Controllers
     public class CustomersController : ControllerBase
     {
         private ICustomers _repo;
-        public CustomersController(ICustomers repo)
+        private IMapper _mapper;
+        public CustomersController(ICustomers repo,IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -21,7 +25,10 @@ namespace InventorySystem_API.Controllers
             List<CustomerDto> modelCustomer = new List<CustomerDto>();
             var model=await _repo.GetAll();
 
-            foreach (var item in model)
+            var modeltoReturn=_mapper.Map<List<CustomerDto>>(model);
+
+            #region MappingUsingLoop
+            /*foreach (var item in model)
             {
                 modelCustomer.Add(new CustomerDto()
                 {
@@ -36,8 +43,33 @@ namespace InventorySystem_API.Controllers
                     ImageUrl=""
                 });
             }
+            */
+            #endregion
+            return Ok(modeltoReturn);
+        }
 
-            return Ok(modelCustomer);
+        [HttpGet("{ID}")]
+        public async Task<IActionResult> GetByID(int ID)
+        {
+            var model=await _repo.GetByID(ID);
+            var ModelReturn= _mapper.Map<CustomerDto>(model);
+
+            return Ok(ModelReturn);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateNew(CustomerDto model)
+        {
+            if(model!=null)
+            {
+                var modeltocreate = _mapper.Map<CustomersModel>(model);
+                var SaveStatus = await _repo.SaveNewCustomer(modeltocreate);
+                if(SaveStatus>0)
+                {
+                    return Ok(modeltocreate);
+                }
+            }
+            return Ok();
         }
     }
 }

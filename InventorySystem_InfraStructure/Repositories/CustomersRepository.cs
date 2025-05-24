@@ -35,5 +35,16 @@ namespace InventorySystem_InfraStructure.Repositories
             
             return model;
         }
+
+        public async Task<int> SaveNewCustomer(CustomersModel model)
+        {
+            int RetStatus = 0;
+            if(model!=null)
+            {
+                await _context.Tbl_Customers.AddAsync(model);
+                RetStatus = await _context.SaveChangesAsync();
+            }
+            return RetStatus;
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace InventorySystem_Application.AppInterfaces
         Task<List<CustomersModel>> GetAll();
         Task<CustomersModel> GetByID(int CustomerID);
 
+        Task<int> SaveNewCustomer(CustomersModel model);
+
     }
 }

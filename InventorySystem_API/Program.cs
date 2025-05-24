@@ -1,3 +1,4 @@
+using InventorySystem_API.Mappers;
 using InventorySystem_Application.AppInterfaces;
 using InventorySystem_InfraStructure.Data;
 using InventorySystem_InfraStructure.Repositories;
@@ -12,14 +13,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
-
-
 // Adding Connection String 
 builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(
     builder.Configuration.GetConnectionString("ConnectionStr")));
 
 builder.Services.AddScoped<ICustomers, CustomersRepository>();
+builder.Services.AddAutoMapper(typeof(MappersProfile));
+
+
+var app = builder.Build();
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
